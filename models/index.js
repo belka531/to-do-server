@@ -1,20 +1,19 @@
 // libraries
-const { Sequelize } = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 
-// models
-const Element = require('./element.model');
+const config = require(__dirname + '/../config/db.config.js');
 
-// connect to the database
-const sequelize = Sequelize.connection;
+if (process.env.NODE_ENV === "test") {
+  var sequelize = new Sequelize('sqlite::memory:');
+} else {
+  var sequelize = new Sequelize(config.database, config.username, config.password, config);
 
-// relationships:
+}
+const db = {};
 
-// create tables if non-existent
-sequelize.sync({ force: false }).then(() => {
-  console.log("Drop and re-sync db.");
-});
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
 
-module.exports = {
-  Element,
-  sequelize,
-};
+db.elements = require('./element.model.js')(sequelize, DataTypes);
+
+module.exports = db;

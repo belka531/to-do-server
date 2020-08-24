@@ -1,20 +1,12 @@
 // libraries
 const express = require('express');
 const bodyParser = require('body-parser');
-const { Sequelize } = require('sequelize');
-
-const DATABASE_CONFIG = require('./config/db.config');
 
 // create app
 const app = express();
+const db = require('./models');
 
-// database config
-const connection = new Sequelize(DATABASE_CONFIG.database, DATABASE_CONFIG.username, DATABASE_CONFIG.password, {
-  ...DATABASE_CONFIG,
-});
-
-Sequelize.connection = connection;
-module.exports = connection;
+db.sequelize.sync();
 
 app.use(bodyParser.json());
 
@@ -24,3 +16,5 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+
+module.exports = app;

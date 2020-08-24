@@ -2,7 +2,8 @@
 const _ = require('lodash');
 
 // models
-const { Element } = require('../models');
+const db = require('../models');
+const Element = db.elements;
 
 exports.create = (req, res) => {
 
@@ -63,7 +64,7 @@ exports.findAllActive = (req, res) => {
 exports.findAllCompleted = (req, res) => {
   Element.findAll({ where: { active: false } })
     .then(data => {
-      res.res.status(200).send(data);
+      res.status(200).send(data);
     })
     .catch(err => {
       res.status(500).send({
@@ -78,8 +79,7 @@ exports.update = (req, res) => {
   const { id } = params;
   const { active } = body;
 
-
-  Element.update({ active :!active }, {
+  Element.update({ active }, {
     where: { id: id }
   })
     .then(num => {
@@ -133,17 +133,17 @@ exports.deleteCompleted = (req, res) => {
     .then(num => {
       if (num >= 1) {
         res.status(200).send({
-          message: "Element was deleted successfully!"
+          message: "Elements was deleted successfully!"
         });
       } else {
         res.status(404).send({
-          message: `Cannot delete element with id=${id}. Maybe element was not found!`
+          message: `Cannot delete elements. Maybe elements were not found!`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Could not delete element with id=" + id
+        message: "Could not delete elements"
       });
     });
 };
