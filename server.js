@@ -1,6 +1,7 @@
 // libraries
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require("cors");
 
 // create app
 const app = express();
@@ -8,6 +9,7 @@ const db = require('./models');
 
 db.sequelize.sync();
 
+app.use(cors());
 app.use(bodyParser.json());
 
 require('./routes/element.routes')(app);
